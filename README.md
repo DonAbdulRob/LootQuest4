@@ -1,7 +1,5 @@
 # tl;dr:
 
-This is the continuation of the LootQuest3 repo with experimental code and features that may or may not be broken at any given time.
-
 See the project live here: https://stackblitz.com/github/DonAbdulRob/LootQuest4<br>
 <em>check the 'How to Play' section below if the link isn't working for any reason</em>
 
@@ -13,6 +11,8 @@ Project Features:
 -   Hand-configured Jest integration with Typescript, Babel, Zustand and React. (no react-scripts)
 -   Dynamic, responsive and instant total website retheming.
 -   And Much More!
+
+Note: This is the continuation of the LootQuest3 repo with experimental code and features added as time goes on.
 
 # Game Description
 
