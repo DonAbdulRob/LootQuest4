@@ -1,16 +1,16 @@
 import React from 'react';
-import { IRootStore } from '../../Models/GlobalGameStore';
 import { AbstractEncounter } from '../AbstractEncounter';
 import { StoryPrompt } from '../StoryPrompt';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import { BaseEncounter } from '../BaseEncounter';
 import { MG_Erin } from '../../Models/Fighter/Monster/MonsterGenerators/Humanoids/MG_Erin';
 import { IG_Herb } from '../../Models/Item/Consumables/IG_Herb';
+import { GlobalContextInterface } from '../../Models/GlobalContextStore';
 
 export class WiseManEncounter extends BaseEncounter implements AbstractEncounter {
     toldWizardTruth = true;
 
-    constructor(store: IRootStore) {
+    constructor(store: GlobalContextInterface) {
         // Require super called to pass up state.
         super(store);
 

@@ -4,7 +4,7 @@
 import React from 'react';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../../../App';
 import { TownDescription } from '../../../../Models/Area/TownDescription';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../../../Models/GlobalGameStore';
+import { GlobalContextInterface, StateContext } from '../../../../Models/GlobalContextStore';
 import { IG_Herb } from '../../../../Models/Item/Consumables/IG_Herb';
 import { IG_Chestplate } from '../../../../Models/Item/Equipment/IG_Chestplate';
 import { IG_Sword } from '../../../../Models/Item/Equipment/IG_Sword';
@@ -14,12 +14,12 @@ import { IG_Wood } from '../../../../Models/Item/Resources/IG_Wood';
 import { EViews } from './EViews';
 import './TownComponent.css';
 
-function setView(store: IRootStore, view: EViews) {
+function setView(store: GlobalContextInterface, view: EViews) {
     store.player.currentTownView = view;
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getRootView(store: IRootStore) {
+function getRootView(store: GlobalContextInterface) {
     let player = store.player;
 
     return (
@@ -60,7 +60,7 @@ function getRootView(store: IRootStore) {
     );
 }
 
-export function useTownInn(store: IRootStore) {
+export function useTownInn(store: GlobalContextInterface) {
     // Allow player to rest if they have the 2 gp. Else, deny.
     let result = store.player.useInn();
 
@@ -74,7 +74,7 @@ export function useTownInn(store: IRootStore) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getInnView(store: IRootStore) {
+function getInnView(store: GlobalContextInterface) {
     let d = store.player.currentArea.descriptions as TownDescription;
 
     return (
@@ -118,7 +118,7 @@ function getInnView(store: IRootStore) {
     );
 }
 
-function getBuyButton(store: IRootStore, itemGenFunction: Function, cost: number) {
+function getBuyButton(store: GlobalContextInterface, itemGenFunction: Function, cost: number) {
     // Create an instance of the item that will be used to show in the component.
     let item = itemGenFunction();
 
@@ -148,7 +148,7 @@ function getBuyButton(store: IRootStore, itemGenFunction: Function, cost: number
     );
 }
 
-function getShopView(store: IRootStore) {
+function getShopView(store: GlobalContextInterface) {
     let d = store.player.currentArea.descriptions as TownDescription;
 
     return (
@@ -167,7 +167,7 @@ function getShopView(store: IRootStore) {
 }
 
 function getForgeElement(
-    store: IRootStore,
+    store: GlobalContextInterface,
     itemGenFunction: Function,
     desc: string,
     goldCost: number,
@@ -214,13 +214,13 @@ function getForgeElement(
     );
 }
 
-function getForgeView(store: IRootStore) {
-    let d = store.player.currentArea.descriptions as TownDescription;
+function getForgeView(store: GlobalContextInterface) {
+    let description = store.player.currentArea.descriptions as TownDescription;
 
     return (
         <div className="town-forge">
             <h1>Forge</h1>
-            <p>{d.forge}</p>
+            <p>{description.forge}</p>
             <div className="town-forge-elements">
                 {getForgeElement(store, IG_Sword.oak, '3x Oak Log, 5 GP', 5, IG_Wood.oak(), 3)}
                 {getForgeElement(store, IG_Sword.bronze, '3x Bronze Ingot, 12 GP', 12, IG_Alloy.bronze(), 3)}
@@ -234,7 +234,7 @@ function getForgeView(store: IRootStore) {
 }
 
 /** TODO
-function getGuildView(store: IRootStore) {
+function getGuildView(store: GlobalContextInterface) {
     return (
         <div>
             <h1>Guild</h1>
@@ -245,7 +245,7 @@ function getGuildView(store: IRootStore) {
 }
  */
 
-function getBackButton(store: IRootStore) {
+function getBackButton(store: GlobalContextInterface) {
     return (
         <button
             onClick={() => {
@@ -257,7 +257,7 @@ function getBackButton(store: IRootStore) {
     );
 }
 export function TownComponent() {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA) => __DATA);
+    const [store, setState] = React.useContext(StateContext);
     let view = store.player.currentTownView;
     let content: any;
 

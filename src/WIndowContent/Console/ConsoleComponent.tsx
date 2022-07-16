@@ -1,5 +1,5 @@
 import React from 'react';
-import { __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
+import { StateContext } from '../../Models/GlobalContextStore';
 
 export interface Line {
     text: string;
@@ -14,7 +14,8 @@ export function getFormattedTime(x: number) {
 }
 
 export default function ConsoleComponent() {
-    let rpgConsole = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.rpgConsole);
+    const [state, setState] = React.useContext(StateContext);
+    let rpgConsole = state.rpgConsole;
 
     return <div className="window-core">{rpgConsole.get()}</div>;
 }

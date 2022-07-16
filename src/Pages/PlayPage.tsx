@@ -11,7 +11,6 @@ import EquipmentComponent from '../WIndowContent/Equipment/EquipmentComponent';
 import ConsoleComponent from '../WIndowContent/Console/ConsoleComponent';
 import CheatComponent from '../WIndowContent/Cheat/CheatComponent';
 import WindowStateManager from '../Models/Singles/WindowStateManager';
-import { __GLOBAL_GAME_STORE } from '../Models/GlobalGameStore';
 import Ability from '../WIndowContent/Ability/AbilityComponent';
 import EmbeddedMainComponent from '../WIndowContent/EmbeddedWindow/EmbeddedMainComponent';
 import FloatingMainComponent from '../WIndowContent/EmbeddedWindow/FloatingMainComponent';
@@ -21,6 +20,7 @@ import { mdiCog, mdiInformationOutline } from '@mdi/js';
 import QuitIconButtonComponent from './Components/QuitIconButtonComponent';
 import ModalStateManager from '../Models/Singles/ModalStateManager';
 import HelpModal from '../Modals/Content/HelpModal';
+import { StateContext } from '../Models/GlobalContextStore';
 
 export interface IFloatingWindowPropsBuilder {
     id?: number;
@@ -133,8 +133,9 @@ export function PlayPage() {
         sc(c + 1);
     };
 
-    let debugMode: boolean = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.debugMode);
-    let windowStateManager: WindowStateManager = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.windowStateManager);
+    const [state, setState] = React.useContext(StateContext);
+    let debugMode: boolean = state.debugMode;
+    let windowStateManager: WindowStateManager = state.windowStateManager;
 
     return (
         <div>

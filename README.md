@@ -1,6 +1,8 @@
 # tl;dr:
 
-See the project live here: https://stackblitz.com/github/Destro168/LootQuest3<br>
+This is the continuation of the LootQuest3 repo with experimental code and features that may or may not be broken at any given time.
+
+See the project live here: https://stackblitz.com/github/DonAbdulRob/LootQuest4<br>
 <em>check the 'How to Play' section below if the link isn't working for any reason</em>
 
 Project Features:

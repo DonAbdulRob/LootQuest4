@@ -6,12 +6,12 @@ import { immerable } from 'immer';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import Area from '../Area/Area';
 import { G_AREA_GREENVALE } from '../Area/AreaContainer';
-import { IRootStore } from '../GlobalGameStore';
 import Fighter from './Fighter';
 import EPlayerActivity from './EPlayerActivity';
 import { Item } from '../Item/Item';
 import { G_getFixedLengthNumber } from '../Helper';
 import { EViews } from '../../WIndowContent/EmbeddedWindow/SubWindows/Town/EViews';
+import { GlobalContextInterface } from '../GlobalContextStore';
 
 export class Player extends Fighter {
     [immerable] = true;
@@ -41,7 +41,7 @@ export class Player extends Fighter {
         this.statBlock.damageMax = 2;
     };
 
-    giveExperience = (state: IRootStore) => {
+    giveExperience = (state: GlobalContextInterface) => {
         // Calculate experience to aware. If the enemy is 4 levels weaker than the player, grant -25% experience per level lower it is.
         let awardExp = state.enemy.experience;
         let levelDiff = this.level - state.enemy.level;

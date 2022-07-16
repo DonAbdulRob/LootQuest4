@@ -1,12 +1,12 @@
 import React from 'react';
 import EPlayerActivity from '../../../Models/Fighter/EPlayerActivity';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../../Models/GlobalGameStore';
 import LootTransitionComponent from './LootTransitionComponent';
 import { PlayerAbilityEffectLib } from '../../../Models/Shared/EffectLib/PlayerAbilityEffectLib';
 import { MG_Erin } from '../../../Models/Fighter/Monster/MonsterGenerators/Humanoids/MG_Erin';
+import { StateContext } from '../../../Models/GlobalContextStore';
 
 export default function CombatComponent(): JSX.Element {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA) => __DATA);
+    const [store, setState] = React.useContext(StateContext);
     let player = store.player;
     let enemy = store.enemy;
     let display;

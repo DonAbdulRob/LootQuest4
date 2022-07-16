@@ -2,14 +2,14 @@
  * The load game component makes use of the 'WTF Forms' 'hack' to create a custom-styled file input component.
  */
 import React from 'react';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../../Models/GlobalGameStore';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../../App';
 import './LoadGame.css';
 import { SaveLib } from '../../../Models/SaveLib';
 import { PageContainer } from '../../Enums/PageContainer';
+import { StateContext } from '../../../Models/GlobalContextStore';
 
 export default function LoadGameComponent() {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA: any) => __DATA);
+    const [state, setState] = React.useContext(StateContext);
 
     function changeFunc(inputEvent: any) {
         let file = inputEvent.target.files[0];
@@ -17,9 +17,9 @@ export default function LoadGameComponent() {
 
         reader.addEventListener('load', function (loadEvent: any) {
             // Load the data, output to console, then send player to play page.
-            SaveLib.loadStateFromSave(store, loadEvent.target.result);
-            store.rpgConsole.add('Game loaded.');
-            store.setPage(PageContainer.Play);
+            SaveLib.loadStateFromSave(state, loadEvent.target.result);
+            state.rpgConsole.add('Game loaded.');
+            state.page = PageContainer.Play;
             __GLOBAL_REFRESH_FUNC_REF();
         });
 

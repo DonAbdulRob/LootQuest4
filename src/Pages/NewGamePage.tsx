@@ -8,7 +8,7 @@ import * as React from 'react';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../App';
 import IconButton from '../Components/IconButton/IconButton';
 import { Player } from '../Models/Fighter/Player';
-import { iconSizeStr, IRootStore, __GLOBAL_GAME_STORE } from '../Models/GlobalGameStore';
+import { iconSizeStr, StateContext } from '../Models/GlobalContextStore';
 import { DifficultyEnum } from '../Models/Singles/GameDifficulty';
 import GameStateManager from '../Models/Singles/GameStateManager';
 import { PageContainer } from './Enums/PageContainer';
@@ -40,9 +40,9 @@ function getDifficultyButton(gameStateManager: GameStateManager, names: string[]
 }
 
 export default function NewGamePage() {
-    let player: Player = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.player);
-    let gameStateManager: GameStateManager = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.gameStateManager);
-    let setPage: Function = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.setPage);
+    const [state, setState] = React.useContext(StateContext);
+    let player: Player = state.player;
+    let gameStateManager: GameStateManager = state.gameStateManager;
 
     let [name, setName] = React.useState(player.name);
     let keys = Object.keys(DifficultyEnum);
@@ -96,7 +96,9 @@ export default function NewGamePage() {
                 {canFinish && (
                     <IconButton
                         onClick={() => {
-                            setPage(PageContainer.Play);
+                            // TODO FIX
+                            state.page = PageContainer.Play;
+                            __GLOBAL_REFRESH_FUNC_REF();
                         }}
                         path={mdiCheck}
                         text="Finish"

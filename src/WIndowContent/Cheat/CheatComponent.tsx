@@ -3,16 +3,16 @@
  */
 import React from 'react';
 import { Equipment, EquipmentType } from '../../Models/Item/Item';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import { Player } from '../../Models/Fighter/Player';
 import { WiseManEncounter } from '../../Story/RandomEncounters/WiseManEncounter';
 import { IG_Wood } from '../../Models/Item/Resources/IG_Wood';
 import { IG_Herb } from '../../Models/Item/Consumables/IG_Herb';
 import { IG_Alloy } from '../../Models/Item/Resources/IG_Alloy';
+import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
 
-function addGodSword(store: IRootStore) {
-    let item = new Equipment('God Sword', 'A cheat god sword.', EquipmentType.WEAPON, 50, 999);
+function addGodSword(store: GlobalContextInterface) {
+    let item = new Equipment('God Sword', 'A cheat god sword.', 50, 999, EquipmentType.WEAPON);
 
     item.statBlock.damageMin = 99;
     item.statBlock.damageMax = 99;
@@ -28,13 +28,13 @@ function addGodSword(store: IRootStore) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function startWiseManEncounter(store: IRootStore) {
+function startWiseManEncounter(store: GlobalContextInterface) {
     // Start the wise man encounter.
     store.gameStateManager.wiseManEncounter = new WiseManEncounter(store);
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function autoPlayOneRound(store: IRootStore) {
+function autoPlayOneRound(store: GlobalContextInterface) {
     let player: Player = store.player;
 
     // Create monster if player is idle.
@@ -57,20 +57,20 @@ function autoPlayOneRound(store: IRootStore) {
     }
 }
 
-function autoPlayTwo(store: IRootStore) {
+function autoPlayTwo(store: GlobalContextInterface) {
     for (let i = 0; i < 10000; i++) {
         autoPlayOneRound(store);
     }
 }
 
-function autoPlayThree(store: IRootStore) {
+function autoPlayThree(store: GlobalContextInterface) {
     for (let i = 0; i < 1000000; i++) {
         autoPlayOneRound(store);
     }
 }
 
 export default function CheatComponent(): JSX.Element {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA) => __DATA);
+    const [store, setState] = React.useContext(StateContext);
     let player = store.player;
 
     return (

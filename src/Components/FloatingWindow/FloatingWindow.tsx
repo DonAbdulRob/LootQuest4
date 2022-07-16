@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import './FloatingWindow.css';
-import { __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
+
 import WindowStateManager from '../../Models/Singles/WindowStateManager';
 import { FloatingWindowData } from '../../Models/Singles/FloatingWindowData';
 import { mdiArrowCollapse, mdiArrowExpand, mdiClose, mdiHook } from '@mdi/js';
 import IconButton from '../IconButton/IconButton';
+import { StateContext } from '../../Models/GlobalContextStore';
 
 // Function taht adds drag-drop behavior to our 'hook' button.
 function assignDragBehavior(
@@ -122,7 +123,8 @@ interface IFloatingWindowProps {
 }
 
 export default function FloatingWindow(props: IFloatingWindowProps): JSX.Element {
-    let windowStateManager: WindowStateManager = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.windowStateManager);
+    const [state, setState] = React.useContext(StateContext);
+    let windowStateManager: WindowStateManager = state.windowStateManager;
 
     const titleBarDragRef = React.useRef<HTMLDivElement>(null);
     const windowContentRef = React.useRef<HTMLDivElement>(null);

@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
+
 import './Modal.css';
 
 export default function HelpModal() {

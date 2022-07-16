@@ -1,7 +1,6 @@
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import { RpgConsole } from '../Singles/RpgConsole';
 import { IMonsterEffectFunction } from '../Fighter/Ability/MonsterAbilityContainer';
-import { IRootStore } from '../GlobalGameStore';
 import { G_getRandomElement, G_getRandomValueBetween, G_getRandomValueUpTo } from '../Helper';
 import { Item } from '../Item/Item';
 import { ICustomDamageMessage } from './ICustomDamageMessage';
@@ -12,6 +11,7 @@ import GameStateManager from '../Singles/GameStateManager';
 import { IG_Herb } from '../Item/Consumables/IG_Herb';
 import { IG_Sword } from '../Item/Equipment/IG_Sword';
 import { IG_Chestplate } from '../Item/Equipment/IG_Chestplate';
+import { GlobalContextInterface } from '../GlobalContextStore';
 
 export default class CombatState {
     round: number = 0;
@@ -23,7 +23,7 @@ export default class CombatState {
      * @param store global game store
      * @param monsterGenerator a possible monster generator
      */
-    startFight(store: IRootStore, monsterGenerator?: MonsterGenerator) {
+    startFight(store: GlobalContextInterface, monsterGenerator?: MonsterGenerator) {
         let player: Player = store.player;
         let enemy: Monster = store.enemy;
         let rpgConsole: RpgConsole = store.rpgConsole;
@@ -97,7 +97,7 @@ export default class CombatState {
         rpgConsole.add(finalMsg);
     }
 
-    processCombatRound(store: IRootStore, customMessage?: ICustomDamageMessage | null) {
+    processCombatRound(store: GlobalContextInterface, customMessage?: ICustomDamageMessage | null) {
         let player = store.player;
         let enemy = store.enemy;
         let rpgConsole = store.rpgConsole;
@@ -210,7 +210,7 @@ export default class CombatState {
         __GLOBAL_REFRESH_FUNC_REF();
     }
 
-    endLooting(store: IRootStore) {
+    endLooting(store: GlobalContextInterface) {
         // Clear loot in combat state.
         store.combatState.loot = [];
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import ItemPopup from '../../Components/Popups/ItemPopup';
 import { EquipmentType } from '../../Models/Item/Item';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import { EquipmentSlotMapping } from '../../Models/Fighter/Storage/EquipmentSlots';
 import { PlayerAbilityEffectLib } from '../../Models/Shared/EffectLib/PlayerAbilityEffectLib';
+import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
 
-function unequip(store: IRootStore, inventorySlot: number) {
+function unequip(store: GlobalContextInterface, inventorySlot: number) {
     let player = store.player;
     let invItem = player.equipmentSlots.items[inventorySlot];
 
@@ -39,7 +39,7 @@ function unequip(store: IRootStore, inventorySlot: number) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getEquipmentMap(store: IRootStore): JSX.Element[] {
+function getEquipmentMap(store: GlobalContextInterface): JSX.Element[] {
     let player = store.player;
 
     if (player.equipmentSlots.items.length === 0) {
@@ -83,7 +83,7 @@ function getEquipmentMap(store: IRootStore): JSX.Element[] {
 }
 
 export default function EquipmentComponent(): JSX.Element {
-    const store: any = __GLOBAL_GAME_STORE((__DATA) => __DATA);
+    const [state, setState] = React.useContext(StateContext);
 
-    return <div className="window-core">{getEquipmentMap(store)}</div>;
+    return <div className="window-core">{getEquipmentMap(state)}</div>;
 }

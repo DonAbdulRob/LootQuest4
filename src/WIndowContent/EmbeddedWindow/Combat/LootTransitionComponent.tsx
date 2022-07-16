@@ -1,8 +1,8 @@
 import React from 'react';
 import ItemPopup from '../../../Components/Popups/ItemPopup';
 import { Item } from '../../../Models/Item/Item';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../../Models/GlobalGameStore';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../../App';
+import { StateContext } from '../../../Models/GlobalContextStore';
 
 function getLootDisplay(loot: Array<Item>) {
     return loot.map((v: Item, i: number) => {
@@ -11,7 +11,7 @@ function getLootDisplay(loot: Array<Item>) {
 }
 
 export default function LootTransitionComponent() {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA) => __DATA);
+    const [store, setState] = React.useContext(StateContext);
     let player = store.player;
     let rpgConsole = store.rpgConsole;
     let combatState = store.combatState;

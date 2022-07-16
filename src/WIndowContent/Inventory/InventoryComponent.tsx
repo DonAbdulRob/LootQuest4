@@ -2,14 +2,14 @@ import React from 'react';
 import ItemPopup from '../../Components/Popups/ItemPopup';
 import { Item, EquipmentType, ItemType, Equipment, Consumable } from '../../Models/Item/Item';
 import { CONSUMABLE_EFFECT_FUNCTION } from '../../Models/Item/ItemEffectToCoreEffectMapper';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
 import { EquipmentSlotMapping } from '../../Models/Fighter/Storage/EquipmentSlots';
 import { Player } from '../../Models/Fighter/Player';
 import { G_MAX_INV_SIZE } from '../../Models/Fighter/Storage/Inventory';
 import { PlayerAbilityEffectLib } from '../../Models/Shared/EffectLib/PlayerAbilityEffectLib';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
+import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
 
-function equip(store: IRootStore, inventorySlot: number) {
+function equip(store: GlobalContextInterface, inventorySlot: number) {
     let player = store.player;
     let invItem: Equipment | Item = player.inventory.items[inventorySlot];
 
@@ -58,7 +58,7 @@ function equip(store: IRootStore, inventorySlot: number) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function drop(store: IRootStore, inventorySlot: number) {
+function drop(store: GlobalContextInterface, inventorySlot: number) {
     let fighter: Player = store.player;
     fighter.inventory.items.splice(inventorySlot, 1);
 
@@ -68,7 +68,7 @@ function drop(store: IRootStore, inventorySlot: number) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getInventoryMap(store: IRootStore): JSX.Element[] {
+function getInventoryMap(store: GlobalContextInterface): JSX.Element[] {
     let player = store.player;
 
     if (player.inventory.items.length === 0) {
@@ -129,8 +129,8 @@ function getInventoryMap(store: IRootStore): JSX.Element[] {
  * Show player inventory. Doesn't support the 'fighter' class objects. Only players.
  */
 export default function InventoryComponent(): JSX.Element {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA) => __DATA);
-    let inv = store.player.inventory;
+    const [state, setState] = React.useContext(StateContext);
+    let inv = state.player.inventory;
 
     return (
         <div className="window-core">
@@ -139,12 +139,12 @@ export default function InventoryComponent(): JSX.Element {
                     '/' +
                     G_MAX_INV_SIZE +
                     ' Slots, ' +
-                    store.player.getTotalWeight() +
+                    state.player.getTotalWeight() +
                     ' / ' +
-                    store.player.weightMax +
+                    state.player.weightMax +
                     ' lb'}
             </h2>
-            {getInventoryMap(store)}
+            {getInventoryMap(state)}
         </div>
     );
 }

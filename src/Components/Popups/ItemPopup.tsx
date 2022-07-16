@@ -1,12 +1,12 @@
 import React from 'react';
 import { Consumable, Equipment, EquipmentType, Item, ItemType } from '../../Models/Item/Item';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
 import { G_removeElement } from '../../Models/Helper';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import './ItemPopup.css';
 import { EquipmentSlotMapping } from '../../Models/Fighter/Storage/EquipmentSlots';
 import { Player } from '../../Models/Fighter/Player';
 import { RpgConsole } from '../../Models/Singles/RpgConsole';
+import { StateContext } from '../../Models/GlobalContextStore';
 
 interface IItemPopupProps {
     prefix: string;
@@ -114,10 +114,10 @@ function getDamageDisplay(fighter: Player, item: Equipment) {
 }
 
 export default function ItemPopup(props: IItemPopupProps) {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA: any) => __DATA);
-    let player: Player = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.player);
-    let combatState = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.combatState);
-    let rpgConsole: RpgConsole = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.rpgConsole);
+    const [state, setState] = React.useContext(StateContext);
+    let player: Player = state.player;
+    let combatState = state.combatState;
+    let rpgConsole: RpgConsole = state.rpgConsole;
     let lootButton = null;
 
     if (props.addLootButton) {
@@ -136,7 +136,7 @@ export default function ItemPopup(props: IItemPopupProps) {
 
                         // If no loot left, end looting.
                         if (combatState.loot.length === 0) {
-                            combatState.endLooting(store);
+                            combatState.endLooting(state);
                             rpgConsole.add('You loot all items and contine your adventure.');
                         }
                     } else {

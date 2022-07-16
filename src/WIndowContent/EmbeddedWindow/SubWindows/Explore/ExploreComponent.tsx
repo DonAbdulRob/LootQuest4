@@ -6,7 +6,6 @@
 import React from 'react';
 import EAreaType from '../../../../Models/Area/EAreaType';
 import { Player } from '../../../../Models/Fighter/Player';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../../../Models/GlobalGameStore';
 import { G_getRandomElement, G_getRandomValueBetween, G_getRandomValueUpTo } from '../../../../Models/Helper';
 import GameStateManager from '../../../../Models/Singles/GameStateManager';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../../../App';
@@ -18,8 +17,9 @@ import { TownComponent } from '../Town/TownComponent';
 import { IG_Wood } from '../../../../Models/Item/Resources/IG_Wood';
 import { IG_Ore } from '../../../../Models/Item/Resources/IG_Ore';
 import AreaComponent from '../../Area/AreaComponent';
+import { GlobalContextInterface, StateContext } from '../../../../Models/GlobalContextStore';
 
-function explore(store: IRootStore) {
+function explore(store: GlobalContextInterface) {
     let rollRes = G_getRandomValueUpTo(100);
     let player: Player = store.player;
     let rpgConsole: RpgConsole = store.rpgConsole;
@@ -92,7 +92,7 @@ function explore(store: IRootStore) {
     }
 }
 
-function getAreaDisplay(store: IRootStore) {
+function getAreaDisplay(store: GlobalContextInterface) {
     let gameStateManager: GameStateManager = store.gameStateManager;
     let player: Player = store.player;
 
@@ -118,7 +118,7 @@ function getAreaDisplay(store: IRootStore) {
 }
 
 export default function ExploreComponent() {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA) => __DATA);
+    const [store, setState] = React.useContext(StateContext);
     let player: Player = store.player;
 
     // Display vars.

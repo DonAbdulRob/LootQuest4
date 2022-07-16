@@ -1,15 +1,13 @@
 import React from 'react';
 import ResourceBar, { ResourceBarProps } from '../../Components/ResourceBar/ResourceBar';
 import Fighter from '../../Models/Fighter/Fighter';
-import { __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
+import { StateContext } from '../../Models/GlobalContextStore';
 import CharacterProps from '../SharedProps/CharacterProps';
 import './CharacterComponent.css';
 
 export default function CharacterComponent(props: CharacterProps): JSX.Element {
-    let fighter: Fighter = props.usePlayer
-        ? __GLOBAL_GAME_STORE((__DATA: any) => __DATA.player)
-        : __GLOBAL_GAME_STORE((__DATA: any) => __DATA.enemy);
-
+    const [state, setState] = React.useContext(StateContext);
+    let fighter: Fighter = props.usePlayer ? state.player : state.enemy;
     let display;
     let expToLevel = fighter.getExpToLevel();
 

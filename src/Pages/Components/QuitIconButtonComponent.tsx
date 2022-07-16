@@ -3,17 +3,19 @@
  */
 import { mdiClose } from '@mdi/js';
 import React from 'react';
+import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import IconButton from '../../Components/IconButton/IconButton';
-import { __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
+import { StateContext } from '../../Models/GlobalContextStore';
 import { PageContainer } from '../Enums/PageContainer';
 
 export default function QuitIconButtonComponent() {
-    let setPage: Function = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.setPage);
+    const [state, setState] = React.useContext(StateContext);
 
     return (
         <IconButton
             onClick={() => {
-                setPage(PageContainer.MainMenu);
+                state.page = PageContainer.MainMenu;
+                __GLOBAL_REFRESH_FUNC_REF();
             }}
             path={mdiClose}
             text="Quit"

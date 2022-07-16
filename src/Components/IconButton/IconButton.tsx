@@ -1,6 +1,6 @@
 import Icon from '@mdi/react';
 import React, { MouseEventHandler } from 'react';
-import { iconSizeStr } from '../../Models/GlobalGameStore';
+import { iconSizeStr } from '../../Models/GlobalContextStore';
 import './IconButton.css';
 
 export interface IconButtonProps {

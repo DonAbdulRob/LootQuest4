@@ -4,10 +4,8 @@
  */
 import React from 'react';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
 import { G_getFixedLengthNumber } from '../../Models/Helper';
 import { SaveLib } from '../../Models/SaveLib';
-import WindowStateManager from '../../Models/Singles/WindowStateManager';
 import LoadGameComponent from '../../Pages/Components/LoadGame/LoadGameComponent';
 import QuitButtonComponent from '../../Pages/Components/QuitButtonComponent';
 import { HexColorPicker } from 'react-colorful';
@@ -15,9 +13,9 @@ import ThemeManager from '../../Models/Singles/ThemeManager';
 import { __G_REFRESH_PLAY_PAGE as __GLOBAL_REFRESH_PLAY_PAGE } from '../../Pages/PlayPage';
 import './Settings.css';
 import './Modal.css';
-import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
-import produce from 'immer';
+import { StateContext } from '../../Models/GlobalContextStore';
 import { ThemePresets } from '../../Models/Singles/EThemePreset';
+import { getThemeChangeButton } from '../../Models/StateChangeComponents/ThemeButtons';
 
 /**
  * Need to add ability to modify game's 5 main colors AND button to reset colors.
@@ -45,40 +43,15 @@ function updateColor(themeManager: ThemeManager, index: number, newColor: string
     themeManager.colors = x;
 }
 
-export function getThemeChangeButton(theme: string, setState: Function) {
-    const changeTheme = React.useCallback((theme) => {
-        setState(
-            produce((draft: GlobalContextInterface) => {
-                draft.themeManager.setThemePreset(theme);
-
-                // Perform theme update to handle global context state changes.
-                draft.themeManager.doUpdate();
-            }),
-        );
-    }, []);
-
-    return (
-        <button
-            onClick={() => {
-                changeTheme(theme);
-            }}
-        >
-            Use {theme} Theme
-        </button>
-    );
-}
-
 export function SettingsComponent() {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA: any) => __DATA);
-    let windowStateManager: WindowStateManager = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.windowStateManager);
-    let saveData: string = SaveLib.getSaveData(store);
     const [state, setState] = React.useContext(StateContext);
+    const saveData: string = SaveLib.getSaveData(state);
     const themeManager = state.themeManager;
-    let [color, setColor] = React.useState(themeManager.colors);
-    let [slider, setSlider] = React.useState(windowStateManager.opacity * 100);
-    let len = themeManager.colors.length;
+    const [color, setColor] = React.useState(themeManager.colors);
+    const [slider, setSlider] = React.useState(state.windowStateManager.opacity * 100);
+    const len = themeManager.colors.length;
 
-    let href = window.URL.createObjectURL(
+    const href = window.URL.createObjectURL(
         new Blob([saveData], {
             type: 'text/plain',
         }),
@@ -94,9 +67,9 @@ export function SettingsComponent() {
             </div>
             <a
                 href={href}
-                download={store.saveLib.saveFileName}
+                download={state.saveLib.saveFileName}
                 onClick={() => {
-                    store.saveLib.updateSaveFileName();
+                    state.saveLib.updateSaveFileName();
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
                 className="a-as-button"
@@ -105,7 +78,7 @@ export function SettingsComponent() {
             </a>
             <LoadGameComponent />
             <div className="window-transparency-div">
-                <p>Window Transparency: {windowStateManager.opacity}</p>
+                <p>Window Transparency: {state.windowStateManager.opacity}</p>
                 <p>Click and drag the slider to modify the opacity of floating windows.</p>
                 <input
                     type="range"
@@ -116,15 +89,15 @@ export function SettingsComponent() {
                         // Update our slider value display, stateful data model and refresh the play page that holds our floating windows.
                         let val = e.target.value;
                         setSlider(val);
-                        windowStateManager.opacity = G_getFixedLengthNumber(val * 0.01);
+                        state.windowStateManager.opacity = G_getFixedLengthNumber(val * 0.01);
                         __GLOBAL_REFRESH_PLAY_PAGE();
                     }}
                 />
             </div>
             <button
                 onClick={() => {
-                    windowStateManager.embedCore = !windowStateManager.embedCore;
-                    windowStateManager.resetWindows();
+                    state.windowStateManager.embedCore = !state.windowStateManager.embedCore;
+                    state.windowStateManager.resetWindows();
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >
@@ -135,7 +108,7 @@ export function SettingsComponent() {
             {getThemeChangeButton(ThemePresets.blue, setState)}
             <button
                 onClick={() => {
-                    windowStateManager.resetWindows();
+                    state.windowStateManager.resetWindows();
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >
@@ -143,7 +116,7 @@ export function SettingsComponent() {
             </button>
             <button
                 onClick={() => {
-                    windowStateManager.allowOffScreen = !windowStateManager.allowOffScreen;
+                    state.windowStateManager.allowOffScreen = !state.windowStateManager.allowOffScreen;
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >
@@ -151,7 +124,7 @@ export function SettingsComponent() {
             </button>
             <button
                 onClick={() => {
-                    store.debugMode = !store.debugMode;
+                    state.debugMode = !state.debugMode;
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >

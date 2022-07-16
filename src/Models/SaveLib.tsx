@@ -1,6 +1,6 @@
 import { __GLOBAL_REFRESH_FUNC_REF } from '../App';
 import { Player } from './Fighter/Player';
-import { IRootStore } from './GlobalGameStore';
+import { GlobalContextInterface } from './GlobalContextStore';
 import { G_MONTHS_ARR, G_getPaddedToTwoDigits, G_getPaddedToThreeDigits } from './Helper';
 import { Item } from './Item/Item';
 
@@ -35,7 +35,7 @@ export class SaveLib {
         );
     }
 
-    static getSaveData(store: IRootStore) {
+    static getSaveData(store: GlobalContextInterface) {
         let player = store.player;
 
         // TODO - save statuses.
@@ -58,7 +58,7 @@ export class SaveLib {
     }
 
     // Protected level method.
-    static loadStateFromSave(store: IRootStore, str: string) {
+    static loadStateFromSave(store: GlobalContextInterface, str: string) {
         let obj = JSON.parse(str);
         let objPlayer = obj.player;
         let player = new Player();

@@ -5,9 +5,9 @@
 import React from 'react';
 import ExploreComponent from './SubWindows/Explore/ExploreComponent';
 import './EmbeddedMainComponent.css';
-import { IRootStore, __GLOBAL_GAME_STORE } from '../../Models/GlobalGameStore';
+import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
 
-export function getMainComponentContent(store: IRootStore, isEmbed: boolean): JSX.Element {
+export function getMainComponentContent(store: GlobalContextInterface, isEmbed: boolean): JSX.Element {
     let finalContent = null;
     let encounterContent = store.gameStateManager.getAnyActiveEncounters();
     let finalClass = isEmbed ? 'embedded-window-core' : 'not-embedded-window-core';
@@ -25,6 +25,6 @@ export function getMainComponentContent(store: IRootStore, isEmbed: boolean): JS
 }
 
 export default function EmbeddedMainComponent() {
-    let store: IRootStore = __GLOBAL_GAME_STORE((__DATA) => __DATA);
+    const [store, setState] = React.useContext(StateContext);
     return getMainComponentContent(store, true);
 }

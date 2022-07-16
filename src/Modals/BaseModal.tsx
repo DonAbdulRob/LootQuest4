@@ -6,7 +6,7 @@
 import Icon from '@mdi/react';
 import * as React from 'react';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../App';
-import { iconSizeStr, __GLOBAL_GAME_STORE } from '../Models/GlobalGameStore';
+import { StateContext, iconSizeStr } from '../Models/GlobalContextStore';
 import ModalStateManager from '../Models/Singles/ModalStateManager';
 import './BaseModal.css';
 
@@ -18,7 +18,8 @@ export interface ModalProps {
 }
 
 export default function BaseModal(props: ModalProps) {
-    let modalStateManager: ModalStateManager = __GLOBAL_GAME_STORE((__DATA: any) => __DATA.modalStateManager);
+    const [state, setState] = React.useContext(StateContext);
+    let modalStateManager: ModalStateManager = state.modalStateManager;
     let modalClassName = 'w3-modal max-z';
     let marginIconRight = props.buttonText !== undefined ? ' margin-right-3' : '';
 
