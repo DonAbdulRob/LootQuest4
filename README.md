@@ -12,8 +12,6 @@ Project Features:
 -   Dynamic, responsive and instant total website retheming.
 -   And Much More!
 
-Note: This is the continuation of the LootQuest3 repo with experimental code and features added as time goes on.
-
 # Game Description
 
 Loot Quest is a traditional turn-based game made modern. Set in an ultra-difficult world full of intricate and one-of-a-kind mechanics, you'll start as a humble peasant with no items, fame or reputation to your name. Struggle your way toward greater strength and conquer. Or, succumb to the environment around you and be conquered.
