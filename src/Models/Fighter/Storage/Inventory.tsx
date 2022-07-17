@@ -3,7 +3,7 @@
  */
 import { IG_Herb } from '../../Item/Consumables/IG_Herb';
 import { Item, EquipmentType, Equipment, Consumable, Resource } from '../../Item/Item';
-import { Player } from '../Player';
+import { Player } from '../Player/Player';
 
 export const G_MAX_INV_SIZE = 20;
 

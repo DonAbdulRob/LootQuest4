@@ -3,12 +3,12 @@
  */
 
 import { RpgConsole } from '../../Singles/RpgConsole';
-import { Player } from '../Player';
+import { Player } from '../Player/Player';
 import { Monster } from '../Monster/Monster';
-import { GlobalContextInterface } from '../../GlobalContextStore';
+import { IGlobalContext } from '../../GlobalContextStore';
 
 export interface IMonsterEffectFunction {
-    (store: GlobalContextInterface): void;
+    (store: IGlobalContext): void;
 }
 
 export class MonsterAbilityContainer {
@@ -25,9 +25,9 @@ export class MonsterAbilityContainer {
 
 // Monster specific effects.
 export class MonsterEffectLib {
-    static power_strike: IMonsterEffectFunction = (store: GlobalContextInterface) => {
-        let player: Player = store.player;
-        let monster: Monster = store.enemy;
+    static power_strike: IMonsterEffectFunction = (store: IGlobalContext) => {
+        let player: Player = store.playerManager.getMainPlayer();
+        let monster: Monster = store.monsterManager.getMainMonster();
         let rpgConsole: RpgConsole = store.rpgConsole;
 
         let abilityDamage = 2;

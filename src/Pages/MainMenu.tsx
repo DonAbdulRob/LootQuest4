@@ -9,7 +9,7 @@ import * as React from 'react';
 import BannerComponent from '../Components/BannerComponent/BannerComponent';
 import BaseModal from '../Modals/BaseModal';
 import HelpModal from '../Modals/Content/HelpModal';
-import { GlobalContextInterface, iconSizeStr, StateContext } from '../Models/GlobalContextStore';
+import { IGlobalContext, iconSizeStr, StateContext } from '../Models/GlobalContextStore';
 import ModalStateManager from '../Models/Singles/ModalStateManager';
 import LoadGameComponent from './Components/LoadGame/LoadGameComponent';
 import { PageContainer } from './Enums/PageContainer';
@@ -20,7 +20,7 @@ export function getSetPageButton(pageArg: PageContainer) {
 
     const setPageState = React.useCallback((page) => {
         setState(
-            produce((draft: GlobalContextInterface) => {
+            produce((draft: IGlobalContext) => {
                 // Update page.
                 draft.page = page;
             }),

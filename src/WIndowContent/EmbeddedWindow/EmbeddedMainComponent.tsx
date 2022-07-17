@@ -5,9 +5,9 @@
 import React from 'react';
 import ExploreComponent from './SubWindows/Explore/ExploreComponent';
 import './EmbeddedMainComponent.css';
-import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
+import { IGlobalContext, StateContext } from '../../Models/GlobalContextStore';
 
-export function getMainComponentContent(store: GlobalContextInterface, isEmbed: boolean): JSX.Element {
+export function getMainComponentContent(store: IGlobalContext, isEmbed: boolean): JSX.Element {
     let finalContent = null;
     let encounterContent = store.gameStateManager.getAnyActiveEncounters();
     let finalClass = isEmbed ? 'embedded-window-core' : 'not-embedded-window-core';

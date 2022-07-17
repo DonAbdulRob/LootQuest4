@@ -1,7 +1,7 @@
 import { G_getRandomValueBetween } from '../Helper';
 import { Equipment } from '../Item/Item';
 import { IStatBlock } from '../Shared/IStatBlock';
-import { StatusContainer } from './Status/StatusContainer';
+import { StatusContainer } from './Player/Status/StatusContainer';
 import { EquipmentSlots } from './Storage/EquipmentSlots';
 import Inventory from './Storage/Inventory';
 import { immerable } from 'immer';

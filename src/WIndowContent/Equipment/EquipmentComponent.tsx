@@ -4,10 +4,10 @@ import { EquipmentType } from '../../Models/Item/Item';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import { EquipmentSlotMapping } from '../../Models/Fighter/Storage/EquipmentSlots';
 import { PlayerAbilityEffectLib } from '../../Models/Shared/EffectLib/PlayerAbilityEffectLib';
-import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
+import { IGlobalContext, StateContext } from '../../Models/GlobalContextStore';
 
-function unequip(store: GlobalContextInterface, inventorySlot: number) {
-    let player = store.player;
+function unequip(store: IGlobalContext, inventorySlot: number) {
+    let player = store.playerManager.getMainPlayer();
     let invItem = player.equipmentSlots.items[inventorySlot];
 
     // Add equipment item to inventory.
@@ -39,8 +39,8 @@ function unequip(store: GlobalContextInterface, inventorySlot: number) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getEquipmentMap(store: GlobalContextInterface): JSX.Element[] {
-    let player = store.player;
+function getEquipmentMap(store: IGlobalContext): JSX.Element[] {
+    let player = store.playerManager.getMainPlayer();
 
     if (player.equipmentSlots.items.length === 0) {
         return [<div key={0}></div>];

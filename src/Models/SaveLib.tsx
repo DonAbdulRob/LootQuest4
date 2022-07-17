@@ -1,6 +1,6 @@
 import { __GLOBAL_REFRESH_FUNC_REF } from '../App';
-import { Player } from './Fighter/Player';
-import { GlobalContextInterface } from './GlobalContextStore';
+import { Player } from './Fighter/Player/Player';
+import { IGlobalContext } from './GlobalContextStore';
 import { G_MONTHS_ARR, G_getPaddedToTwoDigits, G_getPaddedToThreeDigits } from './Helper';
 import { Item } from './Item/Item';
 
@@ -35,8 +35,8 @@ export class SaveLib {
         );
     }
 
-    static getSaveData(store: GlobalContextInterface) {
-        let player = store.player;
+    static getSaveData(store: IGlobalContext) {
+        let player = store.playerManager.getMainPlayer();
 
         // TODO - save statuses.
         // statusContainer: player.statusContainer.getSaveData(),
@@ -58,7 +58,7 @@ export class SaveLib {
     }
 
     // Protected level method.
-    static loadStateFromSave(store: GlobalContextInterface, str: string) {
+    static loadStateFromSave(store: IGlobalContext, str: string) {
         let obj = JSON.parse(str);
         let objPlayer = obj.player;
         let player = new Player();
@@ -93,7 +93,8 @@ export class SaveLib {
             }
         }
 
-        store.player = player;
+        // Set main player to the player loaded.
+        store.playerManager.playerList[0] = player;
         __GLOBAL_REFRESH_FUNC_REF();
     }
 }

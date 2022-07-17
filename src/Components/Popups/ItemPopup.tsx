@@ -4,7 +4,7 @@ import { G_removeElement } from '../../Models/Helper';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import './ItemPopup.css';
 import { EquipmentSlotMapping } from '../../Models/Fighter/Storage/EquipmentSlots';
-import { Player } from '../../Models/Fighter/Player';
+import { Player } from '../../Models/Fighter/Player/Player';
 import { RpgConsole } from '../../Models/Singles/RpgConsole';
 import { StateContext } from '../../Models/GlobalContextStore';
 
@@ -115,7 +115,7 @@ function getDamageDisplay(fighter: Player, item: Equipment) {
 
 export default function ItemPopup(props: IItemPopupProps) {
     const [state, setState] = React.useContext(StateContext);
-    let player: Player = state.player;
+    let player: Player = state.playerManager.getMainPlayer();
     let combatState = state.combatState;
     let rpgConsole: RpgConsole = state.rpgConsole;
     let lootButton = null;

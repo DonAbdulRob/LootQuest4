@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { GlobalContextInterface } from '../../../../Models/GlobalContextStore';
+import { IGlobalContext } from '../../../../Models/GlobalContextStore';
 import { TownComponent } from './TownComponent';
 
 it('town component renders', () => {
@@ -13,7 +13,7 @@ it('town component renders', () => {
 /**
  * 
 function getPlayerGold(store: GlobalContextInterface) {
-    return store.player.gold;
+    return store.playerManager.getMainPlayer().gold;
 }
 
 it('using the inn costs 2 gold (0 gold start, +5 gold cheat, -2 gold)', () => {

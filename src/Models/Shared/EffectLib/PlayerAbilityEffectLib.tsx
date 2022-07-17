@@ -7,38 +7,38 @@
  */
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../../App';
 import { RpgConsole } from '../../Singles/RpgConsole';
-import { Player } from '../../Fighter/Player';
+import { Player } from '../../Fighter/Player/Player';
 import Fighter from '../../Fighter/Fighter';
-import { G_HIDDEN_SKIP_TURN_STATUS, Status } from '../../Fighter/Status/Status';
+import { G_HIDDEN_SKIP_TURN_STATUS, Status } from '../../Fighter/Player/Status/Status';
 import { activateHealthHealItem } from './EffectLIbHelpers';
 import { G_getRandomValueUpTo } from '../../Helper';
-import { GlobalContextInterface } from '../../GlobalContextStore';
+import { IGlobalContext } from '../../GlobalContextStore';
 
 const STR_COMBAT_ONLY = 'This ability can only be used in combat.';
 const STR_NOT_ENOUGH_RESOURCE = `You can't afford to use this ability.`;
 
 export interface IPlayerItemEffectFunction {
-    (store: GlobalContextInterface, index: number): void;
+    (store: IGlobalContext, index: number): void;
 }
 
 export interface IAbilityEffectFunction {
-    (store: GlobalContextInterface): void;
+    (store: IGlobalContext): void;
 }
 
 export interface INonCombatAction {
-    (store: GlobalContextInterface, message: string): void;
+    (store: IGlobalContext, message: string): void;
 }
 
-function canCast_CombatOnlyCheck(store: GlobalContextInterface, staminaCost: number, manaCost: number): boolean {
+function canCast_CombatOnlyCheck(store: IGlobalContext, staminaCost: number, manaCost: number): boolean {
     // Prevent use of ability outside of combat.
-    if (!store.player.isFighting()) {
+    if (!store.playerManager.getMainPlayer().isFighting()) {
         store.rpgConsole.add(STR_COMBAT_ONLY);
         __GLOBAL_REFRESH_FUNC_REF();
         return false;
     }
 
     // Check other conditions.
-    return canCast_AnywhereCheck(store.player, staminaCost, manaCost, store.rpgConsole);
+    return canCast_AnywhereCheck(store.playerManager.getMainPlayer(), staminaCost, manaCost, store.rpgConsole);
 }
 
 /**
@@ -99,32 +99,32 @@ export class CoreEffects {
 
 // Items can be used by players or monsters (WIP). This is for players.
 export class PlayerItemEffectLib {
-    static handleCombatSkip(store: GlobalContextInterface) {
+    static handleCombatSkip(store: IGlobalContext) {
         // If fighting, add skip turn status and handle combat round.
-        if (store.player.isFighting()) {
-            PlayerAbilityEffectLib.addSkipTurnStatusToPlayer(store.player);
+        if (store.playerManager.getMainPlayer().isFighting()) {
+            PlayerAbilityEffectLib.addSkipTurnStatusToPlayer(store.playerManager.getMainPlayer());
             store.combatState.processCombatRound(store);
         }
     }
 
-    static oran_herb: IPlayerItemEffectFunction = (store: GlobalContextInterface, index: number) => {
+    static oran_herb: IPlayerItemEffectFunction = (store: IGlobalContext, index: number) => {
         // Intentionally use seperated store elements since core_effects can apply to any kind of fighter.
-        CoreEffects.oran_herb(store.player, index, store.rpgConsole);
+        CoreEffects.oran_herb(store.playerManager.getMainPlayer(), index, store.rpgConsole);
         PlayerItemEffectLib.handleCombatSkip(store);
     };
 
-    static ryla_herb: IPlayerItemEffectFunction = (store: GlobalContextInterface, index: number) => {
-        CoreEffects.ryla_herb(store.player, index, store.rpgConsole);
+    static ryla_herb: IPlayerItemEffectFunction = (store: IGlobalContext, index: number) => {
+        CoreEffects.ryla_herb(store.playerManager.getMainPlayer(), index, store.rpgConsole);
         PlayerItemEffectLib.handleCombatSkip(store);
     };
 
-    static moro_herb: IPlayerItemEffectFunction = (store: GlobalContextInterface, index: number) => {
-        CoreEffects.moro_herb(store.player, index, store.rpgConsole);
+    static moro_herb: IPlayerItemEffectFunction = (store: IGlobalContext, index: number) => {
+        CoreEffects.moro_herb(store.playerManager.getMainPlayer(), index, store.rpgConsole);
         PlayerItemEffectLib.handleCombatSkip(store);
     };
 
-    static tal_herb: IPlayerItemEffectFunction = (store: GlobalContextInterface, index: number) => {
-        CoreEffects.tal_herb(store.player, index, store.rpgConsole);
+    static tal_herb: IPlayerItemEffectFunction = (store: IGlobalContext, index: number) => {
+        CoreEffects.tal_herb(store.playerManager.getMainPlayer(), index, store.rpgConsole);
         PlayerItemEffectLib.handleCombatSkip(store);
     };
 }
@@ -134,9 +134,9 @@ export class PlayerAbilityEffectLib {
         player.statusContainer.addStatus(new Status(G_HIDDEN_SKIP_TURN_STATUS, 1, null, null, false));
     };
 
-    static doNonCombatAction: INonCombatAction = (store: GlobalContextInterface, actionMessage: string) => {
+    static doNonCombatAction: INonCombatAction = (store: IGlobalContext, actionMessage: string) => {
         // Give player skip_turn status.
-        PlayerAbilityEffectLib.addSkipTurnStatusToPlayer(store.player);
+        PlayerAbilityEffectLib.addSkipTurnStatusToPlayer(store.playerManager.getMainPlayer());
 
         // Process combat round.
         store.combatState.processCombatRound(store, {
@@ -145,19 +145,19 @@ export class PlayerAbilityEffectLib {
         });
     };
 
-    static flee: IAbilityEffectFunction = (store: GlobalContextInterface) => {
+    static flee: IAbilityEffectFunction = (store: IGlobalContext) => {
         // Attempt to flee. On success, return, else, continue combat. (25%)
         let fleeRes = G_getRandomValueUpTo(3);
 
         if (fleeRes === 0) {
             store.rpgConsole.add('You successfully flee from combat.');
-            store.player.setCombatOver();
+            store.playerManager.getMainPlayer().setCombatOver();
             __GLOBAL_REFRESH_FUNC_REF();
             return;
         }
 
         // Give player skip_turn status.
-        PlayerAbilityEffectLib.addSkipTurnStatusToPlayer(store.player);
+        PlayerAbilityEffectLib.addSkipTurnStatusToPlayer(store.playerManager.getMainPlayer());
 
         // Process combat round.
         store.combatState.processCombatRound(store, {
@@ -166,9 +166,9 @@ export class PlayerAbilityEffectLib {
         });
     };
 
-    static defend: IAbilityEffectFunction = (store: GlobalContextInterface) => {
+    static defend: IAbilityEffectFunction = (store: IGlobalContext) => {
         // Player can always defend.
-        let player = store.player;
+        let player = store.playerManager.getMainPlayer();
 
         // Add defense buff status to player.
         let armorMod = 2;
@@ -197,8 +197,8 @@ export class PlayerAbilityEffectLib {
         });
     };
 
-    static equip: IAbilityEffectFunction = (store: GlobalContextInterface) => {
-        let player = store.player;
+    static equip: IAbilityEffectFunction = (store: IGlobalContext) => {
+        let player = store.playerManager.getMainPlayer();
 
         if (player.isFighting()) {
             // Add skip turn status.
@@ -212,8 +212,8 @@ export class PlayerAbilityEffectLib {
         }
     };
 
-    static drop: IAbilityEffectFunction = (store: GlobalContextInterface) => {
-        let player = store.player;
+    static drop: IAbilityEffectFunction = (store: IGlobalContext) => {
+        let player = store.playerManager.getMainPlayer();
 
         if (player.isFighting()) {
             // Add skip turn status.
@@ -227,8 +227,8 @@ export class PlayerAbilityEffectLib {
         }
     };
 
-    static power_strike: IAbilityEffectFunction = (store: GlobalContextInterface) => {
-        let player = store.player;
+    static power_strike: IAbilityEffectFunction = (store: IGlobalContext) => {
+        let player = store.playerManager.getMainPlayer();
 
         // Check that player can cast via standard check function.
         if (!canCast_CombatOnlyCheck(store, 1, 0)) {
@@ -262,8 +262,8 @@ export class PlayerAbilityEffectLib {
         });
     };
 
-    static lesser_heal: IAbilityEffectFunction = (store: GlobalContextInterface) => {
-        let player = store.player;
+    static lesser_heal: IAbilityEffectFunction = (store: IGlobalContext) => {
+        let player = store.playerManager.getMainPlayer();
         let rpgConsole = store.rpgConsole;
 
         // Check that player can cast via standard check function.

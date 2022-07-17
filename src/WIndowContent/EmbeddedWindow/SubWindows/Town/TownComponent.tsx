@@ -4,7 +4,7 @@
 import React from 'react';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../../../App';
 import { TownDescription } from '../../../../Models/Area/TownDescription';
-import { GlobalContextInterface, StateContext } from '../../../../Models/GlobalContextStore';
+import { IGlobalContext, StateContext } from '../../../../Models/GlobalContextStore';
 import { IG_Herb } from '../../../../Models/Item/Consumables/IG_Herb';
 import { IG_Chestplate } from '../../../../Models/Item/Equipment/IG_Chestplate';
 import { IG_Sword } from '../../../../Models/Item/Equipment/IG_Sword';
@@ -14,13 +14,13 @@ import { IG_Wood } from '../../../../Models/Item/Resources/IG_Wood';
 import { EViews } from './EViews';
 import './TownComponent.css';
 
-function setView(store: GlobalContextInterface, view: EViews) {
-    store.player.currentTownView = view;
+function setView(store: IGlobalContext, view: EViews) {
+    store.playerManager.getMainPlayer().currentTownView = view;
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getRootView(store: GlobalContextInterface) {
-    let player = store.player;
+function getRootView(store: IGlobalContext) {
+    let player = store.playerManager.getMainPlayer();
 
     return (
         <div>
@@ -60,12 +60,12 @@ function getRootView(store: GlobalContextInterface) {
     );
 }
 
-export function useTownInn(store: GlobalContextInterface) {
+export function useTownInn(store: IGlobalContext) {
     // Allow player to rest if they have the 2 gp. Else, deny.
-    let result = store.player.useInn();
+    let result = store.playerManager.getMainPlayer().useInn();
 
     if (result) {
-        store.player.fullHeal();
+        store.playerManager.getMainPlayer().fullHeal();
         store.rpgConsole.add('You rest for a while and heal up to perfect condition.');
     } else {
         store.rpgConsole.add('You are too poor to rest here.');
@@ -74,8 +74,8 @@ export function useTownInn(store: GlobalContextInterface) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getInnView(store: GlobalContextInterface) {
-    let d = store.player.currentArea.descriptions as TownDescription;
+function getInnView(store: IGlobalContext) {
+    let d = store.playerManager.getMainPlayer().currentArea.descriptions as TownDescription;
 
     return (
         <div>
@@ -91,13 +91,13 @@ function getInnView(store: GlobalContextInterface) {
             <button
                 onClick={() => {
                     // Buy drinks and unlock knowledge about Erin.
-                    if (store.player.gold >= 2) {
-                        store.player.gold -= 2;
-                        if (store.player.knowsErin === false) {
+                    if (store.playerManager.getMainPlayer().gold >= 2) {
+                        store.playerManager.getMainPlayer().gold -= 2;
+                        if (store.playerManager.getMainPlayer().knowsErin === false) {
                             store.rpgConsole.add(
                                 'You buy a round of drinks for the bar. As they celebrate, a man tells you about a Mage named Erin that he once knew.',
                             );
-                            store.player.knowsErin = true;
+                            store.playerManager.getMainPlayer().knowsErin = true;
                         } else {
                             store.rpgConsole.add(
                                 'You buy a round of drinks at the bar and have a merry time with the other patrons.',
@@ -118,27 +118,31 @@ function getInnView(store: GlobalContextInterface) {
     );
 }
 
-function getBuyButton(store: GlobalContextInterface, itemGenFunction: Function, cost: number) {
+function getBuyButton(store: IGlobalContext, itemGenFunction: Function, cost: number) {
     // Create an instance of the item that will be used to show in the component.
     let item = itemGenFunction();
 
     return (
         <button
             onClick={() => {
-                if (store.player.gold < cost) {
+                if (store.playerManager.getMainPlayer().gold < cost) {
                     store.rpgConsole.add('You are too poor to buy one ' + item.name + '.');
                     __GLOBAL_REFRESH_FUNC_REF();
                     return false;
                 }
-                if (!store.player.inventory.canAdd(store.player, [item])) {
+                if (
+                    !store.playerManager.getMainPlayer().inventory.canAdd(store.playerManager.getMainPlayer(), [item])
+                ) {
                     store.rpgConsole.addItemFail(item.name);
                     __GLOBAL_REFRESH_FUNC_REF();
                     return false;
                 }
 
                 // Take gold and give the player a new instance of the item.
-                store.player.gold -= cost;
-                store.player.inventory.addItem(store.player, itemGenFunction());
+                store.playerManager.getMainPlayer().gold -= cost;
+                store.playerManager
+                    .getMainPlayer()
+                    .inventory.addItem(store.playerManager.getMainPlayer(), itemGenFunction());
                 store.rpgConsole.add('You successfully buy one ' + item.name + '.');
                 __GLOBAL_REFRESH_FUNC_REF();
             }}
@@ -148,8 +152,8 @@ function getBuyButton(store: GlobalContextInterface, itemGenFunction: Function, 
     );
 }
 
-function getShopView(store: GlobalContextInterface) {
-    let d = store.player.currentArea.descriptions as TownDescription;
+function getShopView(store: IGlobalContext) {
+    let d = store.playerManager.getMainPlayer().currentArea.descriptions as TownDescription;
 
     return (
         <div>
@@ -167,14 +171,14 @@ function getShopView(store: GlobalContextInterface) {
 }
 
 function getForgeElement(
-    store: GlobalContextInterface,
+    store: IGlobalContext,
     itemGenFunction: Function,
     desc: string,
     goldCost: number,
     resourceCost: Item,
     resourceCostAmount: number,
 ) {
-    let player = store.player;
+    let player = store.playerManager.getMainPlayer();
     let r = __GLOBAL_REFRESH_FUNC_REF; // short and cute reference
     let itemTemplate = itemGenFunction();
 
@@ -214,8 +218,8 @@ function getForgeElement(
     );
 }
 
-function getForgeView(store: GlobalContextInterface) {
-    let description = store.player.currentArea.descriptions as TownDescription;
+function getForgeView(store: IGlobalContext) {
+    let description = store.playerManager.getMainPlayer().currentArea.descriptions as TownDescription;
 
     return (
         <div className="town-forge">
@@ -238,14 +242,14 @@ function getGuildView(store: GlobalContextInterface) {
     return (
         <div>
             <h1>Guild</h1>
-            <p>{store.player.currentArea.descriptions.guild}</p>
+            <p>{store.playerManager.getMainPlayer().currentArea.descriptions.guild}</p>
             {getBackButton(store)}
         </div>
     );
 }
  */
 
-function getBackButton(store: GlobalContextInterface) {
+function getBackButton(store: IGlobalContext) {
     return (
         <button
             onClick={() => {
@@ -258,7 +262,7 @@ function getBackButton(store: GlobalContextInterface) {
 }
 export function TownComponent() {
     const [store, setState] = React.useContext(StateContext);
-    let view = store.player.currentTownView;
+    let view = store.playerManager.getMainPlayer().currentTownView;
     let content: any;
 
     if (view === EViews.Root) {
@@ -278,7 +282,7 @@ export function TownComponent() {
 
     return (
         <div>
-            <h1>{store.player.currentArea.getDisplay()}</h1>
+            <h1>{store.playerManager.getMainPlayer().currentArea.getDisplay()}</h1>
             {content}
         </div>
     );

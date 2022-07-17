@@ -21,6 +21,7 @@ import QuitIconButtonComponent from './Components/QuitIconButtonComponent';
 import ModalStateManager from '../Models/Singles/ModalStateManager';
 import HelpModal from '../Modals/Content/HelpModal';
 import { StateContext } from '../Models/GlobalContextStore';
+import PartyComponent from '../WIndowContent/Party/PartyComponent';
 
 export interface IFloatingWindowPropsBuilder {
     id?: number;
@@ -33,7 +34,7 @@ export interface IFloatingWindowPropsBuilder {
 /**
  * Builds and returns our array of window content to display on the page.
  */
-function getWindows(debugMode: boolean, windowStateManager: WindowStateManager) {
+function getWindows(multiplayerEnabled: boolean, debugMode: boolean, windowStateManager: WindowStateManager) {
     let topStart = 95;
     let topBottomStart = topStart + 565;
     let windows: Array<IFloatingWindowPropsBuilder> = [];
@@ -84,6 +85,14 @@ function getWindows(debugMode: boolean, windowStateManager: WindowStateManager) 
         left: 1365,
     });
 
+    if (multiplayerEnabled) {
+        windows.push({
+            title: 'Party',
+            contentElement: <PartyComponent />,
+            top: topStart + 500,
+            left: 1365,
+        });
+    }
     if (debugMode) {
         windows.push({
             title: 'Cheat',
@@ -134,6 +143,7 @@ export function PlayPage() {
     };
 
     const [state, setState] = React.useContext(StateContext);
+    let multiplayerEnabled = state.multiplayerManager.multiplayerEnabled;
     let debugMode: boolean = state.debugMode;
     let windowStateManager: WindowStateManager = state.windowStateManager;
 
@@ -164,7 +174,7 @@ export function PlayPage() {
             </div>
 
             {/* All of our windows */}
-            <div id="floating-window-container">{getWindows(debugMode, windowStateManager)}</div>
+            <div id="floating-window-container">{getWindows(multiplayerEnabled, debugMode, windowStateManager)}</div>
 
             {/* Embedded main component IF 'embed' setting is toggled by user. */}
             {windowStateManager.embedCore && (

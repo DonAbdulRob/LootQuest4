@@ -12,7 +12,7 @@ function getLootDisplay(loot: Array<Item>) {
 
 export default function LootTransitionComponent() {
     const [store, setState] = React.useContext(StateContext);
-    let player = store.player;
+    let player = store.playerManager.getMainPlayer();
     let rpgConsole = store.rpgConsole;
     let combatState = store.combatState;
 

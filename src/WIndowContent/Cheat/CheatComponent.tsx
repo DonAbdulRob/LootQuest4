@@ -4,14 +4,14 @@
 import React from 'react';
 import { Equipment, EquipmentType } from '../../Models/Item/Item';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
-import { Player } from '../../Models/Fighter/Player';
+import { Player } from '../../Models/Fighter/Player/Player';
 import { WiseManEncounter } from '../../Story/RandomEncounters/WiseManEncounter';
 import { IG_Wood } from '../../Models/Item/Resources/IG_Wood';
 import { IG_Herb } from '../../Models/Item/Consumables/IG_Herb';
 import { IG_Alloy } from '../../Models/Item/Resources/IG_Alloy';
-import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
+import { IGlobalContext, StateContext } from '../../Models/GlobalContextStore';
 
-function addGodSword(store: GlobalContextInterface) {
+function addGodSword(store: IGlobalContext) {
     let item = new Equipment('God Sword', 'A cheat god sword.', 50, 999, EquipmentType.WEAPON);
 
     item.statBlock.damageMin = 99;
@@ -21,21 +21,21 @@ function addGodSword(store: GlobalContextInterface) {
     item.statBlock.mana = 99;
     item.statBlock.armor = 99;
 
-    if (!store.player.inventory.addItem(store.player, item)) {
+    if (!store.playerManager.getMainPlayer().inventory.addItem(store.playerManager.getMainPlayer(), item)) {
         store.rpgConsole.addItemFail(item.name);
     }
 
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function startWiseManEncounter(store: GlobalContextInterface) {
+function startWiseManEncounter(store: IGlobalContext) {
     // Start the wise man encounter.
     store.gameStateManager.wiseManEncounter = new WiseManEncounter(store);
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function autoPlayOneRound(store: GlobalContextInterface) {
-    let player: Player = store.player;
+function autoPlayOneRound(store: IGlobalContext) {
+    let player: Player = store.playerManager.getMainPlayer();
 
     // Create monster if player is idle.
     if (player.isIdle()) {
@@ -57,13 +57,13 @@ function autoPlayOneRound(store: GlobalContextInterface) {
     }
 }
 
-function autoPlayTwo(store: GlobalContextInterface) {
+function autoPlayTwo(store: IGlobalContext) {
     for (let i = 0; i < 10000; i++) {
         autoPlayOneRound(store);
     }
 }
 
-function autoPlayThree(store: GlobalContextInterface) {
+function autoPlayThree(store: IGlobalContext) {
     for (let i = 0; i < 1000000; i++) {
         autoPlayOneRound(store);
     }
@@ -71,7 +71,7 @@ function autoPlayThree(store: GlobalContextInterface) {
 
 export default function CheatComponent(): JSX.Element {
     const [store, setState] = React.useContext(StateContext);
-    let player = store.player;
+    let player = store.playerManager.getMainPlayer();
 
     return (
         <div className="window-core">
@@ -84,7 +84,9 @@ export default function CheatComponent(): JSX.Element {
             </button>
             <button
                 onClick={() => {
-                    store.player.inventory.addItem(store.player, IG_Wood.oak());
+                    store.playerManager
+                        .getMainPlayer()
+                        .inventory.addItem(store.playerManager.getMainPlayer(), IG_Wood.oak());
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >
@@ -92,7 +94,9 @@ export default function CheatComponent(): JSX.Element {
             </button>
             <button
                 onClick={() => {
-                    store.player.inventory.addItem(store.player, IG_Alloy.bronze());
+                    store.playerManager
+                        .getMainPlayer()
+                        .inventory.addItem(store.playerManager.getMainPlayer(), IG_Alloy.bronze());
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >
@@ -100,7 +104,9 @@ export default function CheatComponent(): JSX.Element {
             </button>
             <button
                 onClick={() => {
-                    store.player.inventory.addItem(store.player, IG_Alloy.iron());
+                    store.playerManager
+                        .getMainPlayer()
+                        .inventory.addItem(store.playerManager.getMainPlayer(), IG_Alloy.iron());
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >
@@ -108,7 +114,9 @@ export default function CheatComponent(): JSX.Element {
             </button>
             <button
                 onClick={() => {
-                    store.player.inventory.addItem(store.player, IG_Herb.tal());
+                    store.playerManager
+                        .getMainPlayer()
+                        .inventory.addItem(store.playerManager.getMainPlayer(), IG_Herb.tal());
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
             >

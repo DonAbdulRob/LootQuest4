@@ -6,12 +6,12 @@ import { Item } from '../Item/Item';
 import { ICustomDamageMessage } from './ICustomDamageMessage';
 import { Monster } from '../Fighter/Monster/Monster';
 import { MonsterGenerator } from '../Fighter/Monster/MonsterGenerator';
-import { Player } from '../Fighter/Player';
+import { Player } from '../Fighter/Player/Player';
 import GameStateManager from '../Singles/GameStateManager';
 import { IG_Herb } from '../Item/Consumables/IG_Herb';
 import { IG_Sword } from '../Item/Equipment/IG_Sword';
 import { IG_Chestplate } from '../Item/Equipment/IG_Chestplate';
-import { GlobalContextInterface } from '../GlobalContextStore';
+import { IGlobalContext } from '../GlobalContextStore';
 
 export default class CombatState {
     round: number = 0;
@@ -23,9 +23,9 @@ export default class CombatState {
      * @param store global game store
      * @param monsterGenerator a possible monster generator
      */
-    startFight(store: GlobalContextInterface, monsterGenerator?: MonsterGenerator) {
-        let player: Player = store.player;
-        let enemy: Monster = store.enemy;
+    startFight(store: IGlobalContext, monsterGenerator?: MonsterGenerator) {
+        let player: Player = store.playerManager.getMainPlayer();
+        let enemy: Monster = store.monsterManager.getMainMonster();
         let rpgConsole: RpgConsole = store.rpgConsole;
         let gameStateManager: GameStateManager = store.gameStateManager;
         let monsterLevel = G_getRandomValueBetween(player.currentArea.levelMin, player.currentArea.levelMax);
@@ -97,9 +97,9 @@ export default class CombatState {
         rpgConsole.add(finalMsg);
     }
 
-    processCombatRound(store: GlobalContextInterface, customMessage?: ICustomDamageMessage | null) {
-        let player = store.player;
-        let enemy = store.enemy;
+    processCombatRound(store: IGlobalContext, customMessage?: ICustomDamageMessage | null) {
+        let player = store.playerManager.getMainPlayer();
+        let enemy = store.monsterManager.getMainMonster();
         let rpgConsole = store.rpgConsole;
         let combatState = store.combatState;
         let playerDead = false;
@@ -144,7 +144,7 @@ export default class CombatState {
             enemyDead = true;
             rpgConsole.add('Enemy died.');
             player.gold += enemy.gold;
-            player.giveExperience(store);
+            player.giveExperience(store, enemy);
             player.setLooting();
 
             // Generate loot.
@@ -210,12 +210,12 @@ export default class CombatState {
         __GLOBAL_REFRESH_FUNC_REF();
     }
 
-    endLooting(store: GlobalContextInterface) {
+    endLooting(store: IGlobalContext) {
         // Clear loot in combat state.
         store.combatState.loot = [];
 
         // Advance combat to next phase (out of combat)
-        store.player.setCombatOver();
+        store.playerManager.getMainPlayer().setCombatOver();
 
         // Refresh screen.
         __GLOBAL_REFRESH_FUNC_REF();

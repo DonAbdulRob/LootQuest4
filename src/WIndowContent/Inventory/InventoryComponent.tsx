@@ -3,14 +3,14 @@ import ItemPopup from '../../Components/Popups/ItemPopup';
 import { Item, EquipmentType, ItemType, Equipment, Consumable } from '../../Models/Item/Item';
 import { CONSUMABLE_EFFECT_FUNCTION } from '../../Models/Item/ItemEffectToCoreEffectMapper';
 import { EquipmentSlotMapping } from '../../Models/Fighter/Storage/EquipmentSlots';
-import { Player } from '../../Models/Fighter/Player';
+import { Player } from '../../Models/Fighter/Player/Player';
 import { G_MAX_INV_SIZE } from '../../Models/Fighter/Storage/Inventory';
 import { PlayerAbilityEffectLib } from '../../Models/Shared/EffectLib/PlayerAbilityEffectLib';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
-import { GlobalContextInterface, StateContext } from '../../Models/GlobalContextStore';
+import { IGlobalContext, StateContext } from '../../Models/GlobalContextStore';
 
-function equip(store: GlobalContextInterface, inventorySlot: number) {
-    let player = store.player;
+function equip(store: IGlobalContext, inventorySlot: number) {
+    let player = store.playerManager.getMainPlayer();
     let invItem: Equipment | Item = player.inventory.items[inventorySlot];
 
     if (!(invItem instanceof Equipment)) {
@@ -58,8 +58,8 @@ function equip(store: GlobalContextInterface, inventorySlot: number) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function drop(store: GlobalContextInterface, inventorySlot: number) {
-    let fighter: Player = store.player;
+function drop(store: IGlobalContext, inventorySlot: number) {
+    let fighter: Player = store.playerManager.getMainPlayer();
     fighter.inventory.items.splice(inventorySlot, 1);
 
     // Do drop effect.
@@ -68,8 +68,8 @@ function drop(store: GlobalContextInterface, inventorySlot: number) {
     __GLOBAL_REFRESH_FUNC_REF();
 }
 
-function getInventoryMap(store: GlobalContextInterface): JSX.Element[] {
-    let player = store.player;
+function getInventoryMap(store: IGlobalContext): JSX.Element[] {
+    let player = store.playerManager.getMainPlayer();
 
     if (player.inventory.items.length === 0) {
         return [<div key={0}></div>];
@@ -130,7 +130,7 @@ function getInventoryMap(store: GlobalContextInterface): JSX.Element[] {
  */
 export default function InventoryComponent(): JSX.Element {
     const [state, setState] = React.useContext(StateContext);
-    let inv = state.player.inventory;
+    let inv = state.playerManager.getMainPlayer().inventory;
 
     return (
         <div className="window-core">
@@ -139,9 +139,9 @@ export default function InventoryComponent(): JSX.Element {
                     '/' +
                     G_MAX_INV_SIZE +
                     ' Slots, ' +
-                    state.player.getTotalWeight() +
+                    state.playerManager.getMainPlayer().getTotalWeight() +
                     ' / ' +
-                    state.player.weightMax +
+                    state.playerManager.getMainPlayer().weightMax +
                     ' lb'}
             </h2>
             {getInventoryMap(state)}

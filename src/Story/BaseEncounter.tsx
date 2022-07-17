@@ -1,4 +1,4 @@
-import { GlobalContextInterface } from '../Models/GlobalContextStore';
+import { IGlobalContext } from '../Models/GlobalContextStore';
 import { AbstractEncounter } from './AbstractEncounter';
 import { StoryPrompt } from './StoryPrompt';
 
@@ -6,9 +6,9 @@ export class BaseEncounter implements AbstractEncounter {
     nextPrompt: StoryPrompt = new StoryPrompt('', []);
     introLines: string[] = [];
     isOver: boolean = false;
-    store: GlobalContextInterface;
+    store: IGlobalContext;
 
-    constructor(state: GlobalContextInterface) {
+    constructor(state: IGlobalContext) {
         this.store = state;
     }
 

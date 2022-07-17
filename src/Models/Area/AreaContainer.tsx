@@ -2,7 +2,7 @@
  * The 'AreaContainer' is our game map. We don't call it 'Map' because that's a js reserved keyword.
  */
 
-import { Player } from '../Fighter/Player';
+import { Player } from '../Fighter/Player/Player';
 import Area from './Area';
 import AreaDescriptions from './AreaDescriptions';
 import EAreaType from './EAreaType';

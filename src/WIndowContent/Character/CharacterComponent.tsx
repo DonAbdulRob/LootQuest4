@@ -7,7 +7,7 @@ import './CharacterComponent.css';
 
 export default function CharacterComponent(props: CharacterProps): JSX.Element {
     const [state, setState] = React.useContext(StateContext);
-    let fighter: Fighter = props.usePlayer ? state.player : state.enemy;
+    let fighter: Fighter = props.usePlayer ? state.playerManager.getMainPlayer() : state.enemy;
     let display;
     let expToLevel = fighter.getExpToLevel();
 

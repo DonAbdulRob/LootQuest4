@@ -7,8 +7,8 @@ import { StateContext } from '../../../Models/GlobalContextStore';
 
 export default function CombatComponent(): JSX.Element {
     const [store, setState] = React.useContext(StateContext);
-    let player = store.player;
-    let enemy = store.enemy;
+    let player = store.playerManager.getMainPlayer();
+    let enemy = store.monsterManager.getMainMonster();
     let display;
     let mg = enemy.monsterGenerator;
     let enemyName = '';

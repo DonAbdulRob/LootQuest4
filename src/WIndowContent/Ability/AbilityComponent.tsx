@@ -6,7 +6,7 @@ import { StateContext } from '../../Models/GlobalContextStore';
 
 export default function AbilityComponent() {
     const [store, setState] = React.useContext(StateContext);
-    let player = store.player;
+    let player = store.playerManager.getMainPlayer();
 
     let display = player.abilities.abilityArray.map((v: Ability, i: number) => {
         return (

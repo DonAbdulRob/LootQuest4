@@ -10,8 +10,9 @@
 import React from 'react';
 import { Page } from '../Pages/Enums/Page';
 import { PageContainer } from '../Pages/Enums/PageContainer';
-import { Monster } from './Fighter/Monster/Monster';
-import { Player } from './Fighter/Player';
+import { MonsterManager } from './Fighter/MonsterManager';
+import { PlayerManager } from './Fighter/PlayerManager';
+import { MultiplayerManager } from './Multiplayer/MultiplayerManager';
 import { SaveLib } from './SaveLib';
 import CombatState from './Shared/CombatState';
 import GameStateManager from './Singles/GameStateManager';
@@ -24,10 +25,11 @@ export const baseIconSize = 18;
 export const iconSizeStr = baseIconSize + 'px';
 export const StateContext = React.createContext(undefined);
 
-export interface GlobalContextInterface {
+export interface IGlobalContext {
+    multiplayerManager: MultiplayerManager;
     themeManager: ThemeManager;
-    player: Player;
-    enemy: Monster;
+    playerManager: PlayerManager;
+    monsterManager: MonsterManager;
     combatState: CombatState;
     rpgConsole: RpgConsole;
     windowStateManager: WindowStateManager;
@@ -38,11 +40,12 @@ export interface GlobalContextInterface {
     page: Page;
 }
 
-export function _G_GET_NEW_GLOBAL_CONTEXT_STATE_OBJECT(): GlobalContextInterface {
+export function _G_GET_NEW_GLOBAL_CONTEXT_STATE_OBJECT(): IGlobalContext {
     return {
+        multiplayerManager: new MultiplayerManager(),
         themeManager: new ThemeManager(),
-        player: new Player(),
-        enemy: new Monster(),
+        playerManager: new PlayerManager(),
+        monsterManager: new MonsterManager(),
         combatState: new CombatState(),
         rpgConsole: new RpgConsole(),
         windowStateManager: new WindowStateManager(),
@@ -50,6 +53,6 @@ export function _G_GET_NEW_GLOBAL_CONTEXT_STATE_OBJECT(): GlobalContextInterface
         modalStateManager: new ModalStateManager(),
         saveLib: new SaveLib(),
         debugMode: false,
-        page: PageContainer.MainMenu, // MainMenu for prod, Play for debug.
+        page: PageContainer.Play, // MainMenu for prod, Play for debug.
     };
 }

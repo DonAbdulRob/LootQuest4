@@ -7,7 +7,7 @@ import Icon from '@mdi/react';
 import * as React from 'react';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../App';
 import IconButton from '../Components/IconButton/IconButton';
-import { Player } from '../Models/Fighter/Player';
+import { Player } from '../Models/Fighter/Player/Player';
 import { iconSizeStr, StateContext } from '../Models/GlobalContextStore';
 import { DifficultyEnum } from '../Models/Singles/GameDifficulty';
 import GameStateManager from '../Models/Singles/GameStateManager';
@@ -41,7 +41,7 @@ function getDifficultyButton(gameStateManager: GameStateManager, names: string[]
 
 export default function NewGamePage() {
     const [state, setState] = React.useContext(StateContext);
-    let player: Player = state.player;
+    let player: Player = state.playerManager.getMainPlayer();
     let gameStateManager: GameStateManager = state.gameStateManager;
 
     let [name, setName] = React.useState(player.name);
@@ -82,7 +82,7 @@ export default function NewGamePage() {
             </div>
 
             <div className="new-game-section">
-                <h1>Difficulty - {difficultyStr}</h1>
+                <h1>Current Difficulty: {difficultyStr}</h1>
                 <h2>{desc}</h2>
                 <div style={{ display: 'flex' }}>
                     {getDifficultyButton(gameStateManager, names, 0)}
@@ -92,12 +92,41 @@ export default function NewGamePage() {
                 </div>
             </div>
 
+            {/* Multiplayer State Manager */}
+            <div className="new-game-section">
+                <h1>Enable Multiplayer?</h1>
+                <h2>Currently: {state.multiplayerManager.multiplayerEnabled + ''}</h2>
+                <div style={{ display: 'flex' }}>
+                    <button
+                        onClick={() => {
+                            state.multiplayerManager.multiplayerEnabled = true;
+                            __GLOBAL_REFRESH_FUNC_REF();
+                        }}
+                    >
+                        Yes
+                    </button>
+                    <button
+                        onClick={() => {
+                            state.multiplayerManager.multiplayerEnabled = false;
+                            __GLOBAL_REFRESH_FUNC_REF();
+                        }}
+                    >
+                        No
+                    </button>
+                </div>
+            </div>
+
             <div className="new-game-section">
                 {canFinish && (
                     <IconButton
                         onClick={() => {
-                            // TODO FIX
                             state.page = PageContainer.Play;
+
+                            // If multiplayer is on, connect.
+                            if (state.multiplayerManager.multiplayerEnabled) {
+                                let sessionId = state.multiplayerManager.connect();
+                            }
+
                             __GLOBAL_REFRESH_FUNC_REF();
                         }}
                         path={mdiCheck}

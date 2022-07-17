@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import EAreaType from '../../../../Models/Area/EAreaType';
-import { Player } from '../../../../Models/Fighter/Player';
+import { Player } from '../../../../Models/Fighter/Player/Player';
 import { G_getRandomElement, G_getRandomValueBetween, G_getRandomValueUpTo } from '../../../../Models/Helper';
 import GameStateManager from '../../../../Models/Singles/GameStateManager';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../../../App';
@@ -17,11 +17,11 @@ import { TownComponent } from '../Town/TownComponent';
 import { IG_Wood } from '../../../../Models/Item/Resources/IG_Wood';
 import { IG_Ore } from '../../../../Models/Item/Resources/IG_Ore';
 import AreaComponent from '../../Area/AreaComponent';
-import { GlobalContextInterface, StateContext } from '../../../../Models/GlobalContextStore';
+import { IGlobalContext, StateContext } from '../../../../Models/GlobalContextStore';
 
-function explore(store: GlobalContextInterface) {
+function explore(store: IGlobalContext) {
     let rollRes = G_getRandomValueUpTo(100);
-    let player: Player = store.player;
+    let player: Player = store.playerManager.getMainPlayer();
     let rpgConsole: RpgConsole = store.rpgConsole;
     let combatState: CombatState = store.combatState;
     let gameStateManager: GameStateManager = store.gameStateManager;
@@ -92,9 +92,9 @@ function explore(store: GlobalContextInterface) {
     }
 }
 
-function getAreaDisplay(store: GlobalContextInterface) {
+function getAreaDisplay(store: IGlobalContext) {
     let gameStateManager: GameStateManager = store.gameStateManager;
-    let player: Player = store.player;
+    let player: Player = store.playerManager.getMainPlayer();
 
     if (player.currentArea.type === EAreaType.TOWN) {
         return <TownComponent />;
@@ -119,7 +119,7 @@ function getAreaDisplay(store: GlobalContextInterface) {
 
 export default function ExploreComponent() {
     const [store, setState] = React.useContext(StateContext);
-    let player: Player = store.player;
+    let player: Player = store.playerManager.getMainPlayer();
 
     // Display vars.
     let content: any;

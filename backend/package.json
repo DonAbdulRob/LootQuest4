@@ -1,0 +1,21 @@
+{
+    "name": "lq4_backend",
+    "version": "0.1.0",
+    "description": "LootQuest4 backend",
+    "main": "main.js",
+    "scripts": {
+        "dev": "nodemon app.js",
+        "start": "node app.js",
+        "test": "test"
+    },
+    "author": "Donald Abdullah-Robinson",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.1",
+        "prettier": "^2.7.1",
+        "socket.io": "^4.5.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.19"
+    }
+}

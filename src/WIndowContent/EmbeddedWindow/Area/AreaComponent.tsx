@@ -10,7 +10,7 @@ import './AreaComponent.css';
 
 export default function AreaComponent() {
     const [store, setState] = React.useContext(StateContext);
-    let player = store.player;
+    let player = store.playerManager.getMainPlayer();
 
     return (
         <div className="area-parent-container">

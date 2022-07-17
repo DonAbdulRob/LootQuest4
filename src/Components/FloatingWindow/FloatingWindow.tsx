@@ -3,7 +3,7 @@ import './FloatingWindow.css';
 
 import WindowStateManager from '../../Models/Singles/WindowStateManager';
 import { FloatingWindowData } from '../../Models/Singles/FloatingWindowData';
-import { mdiArrowCollapse, mdiArrowExpand, mdiClose, mdiHook } from '@mdi/js';
+import { mdiArrowCollapse, mdiArrowExpand, mdiClose } from '@mdi/js';
 import IconButton from '../IconButton/IconButton';
 import { StateContext } from '../../Models/GlobalContextStore';
 
@@ -35,7 +35,7 @@ function assignDragBehavior(
 
             windowData.isBeingHovered = false;
 
-            // Update stored
+            // Update store
             let elmnt: any = mouseDownEvent.target;
 
             for (let i = 0; i < levelsToParent; i++) {

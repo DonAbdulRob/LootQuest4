@@ -5,12 +5,12 @@ import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
 import { BaseEncounter } from '../BaseEncounter';
 import { MG_Erin } from '../../Models/Fighter/Monster/MonsterGenerators/Humanoids/MG_Erin';
 import { IG_Herb } from '../../Models/Item/Consumables/IG_Herb';
-import { GlobalContextInterface } from '../../Models/GlobalContextStore';
+import { IGlobalContext } from '../../Models/GlobalContextStore';
 
 export class WiseManEncounter extends BaseEncounter implements AbstractEncounter {
     toldWizardTruth = true;
 
-    constructor(store: GlobalContextInterface) {
+    constructor(store: IGlobalContext) {
         // Require super called to pass up state.
         super(store);
 
@@ -42,7 +42,11 @@ export class WiseManEncounter extends BaseEncounter implements AbstractEncounter
                     this.isOver = true;
                     this.store.combatState.startFight(
                         this.store,
-                        new MG_Erin(this.store.enemy.statBlock, -1, this.store.gameStateManager.gameDifficulty),
+                        new MG_Erin(
+                            this.store.monsterManager.getMainMonster().statBlock,
+                            -1,
+                            this.store.gameStateManager.gameDifficulty,
+                        ),
                     );
                     __GLOBAL_REFRESH_FUNC_REF();
                 }}
@@ -167,7 +171,9 @@ export class WiseManEncounter extends BaseEncounter implements AbstractEncounter
             this.getAttackButton(),
         ],
         () => {
-            this.store.player.inventory.addItem(this.store.player, IG_Herb.moro());
+            this.store.playerManager
+                .getMainPlayer()
+                .inventory.addItem(this.store.playerManager.getMainPlayer(), IG_Herb.moro());
         },
     );
 }

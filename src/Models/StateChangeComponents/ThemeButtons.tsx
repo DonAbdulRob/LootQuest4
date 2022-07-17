@@ -1,11 +1,11 @@
 import produce from 'immer';
 import React from 'react';
-import { GlobalContextInterface } from '../GlobalContextStore';
+import { IGlobalContext } from '../GlobalContextStore';
 
 export function getThemeChangeButton(themeArg: string, setState: Function) {
     const changeTheme = React.useCallback((theme) => {
         setState(
-            produce((draft: GlobalContextInterface) => {
+            produce((draft: IGlobalContext) => {
                 draft.themeManager.setThemePreset(theme);
 
                 // Perform theme update to handle global context state changes.

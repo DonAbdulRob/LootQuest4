@@ -1,17 +1,18 @@
 /**
  * Represents the main character being played by the real-life player interacting with the game.
  */
-import { PlayerAbilityContainer } from './Ability/PlayerAbilityContainer';
+import { PlayerAbilityContainer } from '../Ability/PlayerAbilityContainer';
 import { immerable } from 'immer';
-import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
-import Area from '../Area/Area';
-import { G_AREA_GREENVALE } from '../Area/AreaContainer';
-import Fighter from './Fighter';
-import EPlayerActivity from './EPlayerActivity';
-import { Item } from '../Item/Item';
-import { G_getFixedLengthNumber } from '../Helper';
-import { EViews } from '../../WIndowContent/EmbeddedWindow/SubWindows/Town/EViews';
-import { GlobalContextInterface } from '../GlobalContextStore';
+import { __GLOBAL_REFRESH_FUNC_REF } from '../../../App';
+import Area from '../../Area/Area';
+import { G_AREA_GREENVALE } from '../../Area/AreaContainer';
+import Fighter from '../Fighter';
+import EPlayerActivity from '../EPlayerActivity';
+import { Item } from '../../Item/Item';
+import { G_getFixedLengthNumber } from '../../Helper';
+import { EViews } from '../../../WIndowContent/EmbeddedWindow/SubWindows/Town/EViews';
+import { Monster } from '../Monster/Monster';
+import { IGlobalContext } from '../../GlobalContextStore';
 
 export class Player extends Fighter {
     [immerable] = true;
@@ -41,10 +42,10 @@ export class Player extends Fighter {
         this.statBlock.damageMax = 2;
     };
 
-    giveExperience = (state: GlobalContextInterface) => {
+    giveExperience = (state: IGlobalContext, deadEnemy: Monster) => {
         // Calculate experience to aware. If the enemy is 4 levels weaker than the player, grant -25% experience per level lower it is.
-        let awardExp = state.enemy.experience;
-        let levelDiff = this.level - state.enemy.level;
+        let awardExp = deadEnemy.experience;
+        let levelDiff = this.level - deadEnemy.level;
 
         if (levelDiff > 3) {
             awardExp *= 1 - (levelDiff - 2) * 0.25;
