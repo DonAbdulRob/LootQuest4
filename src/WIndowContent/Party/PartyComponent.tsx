@@ -1,10 +1,11 @@
 import React from 'react';
 import io from 'socket.io-client';
 import { __GLOBAL_REFRESH_FUNC_REF } from '../../App';
+import { StateContext } from '../../Models/GlobalContextStore';
 
 export default function PartyComponent() {
-    // Global socket io variable.
-    const socket = io('http://localhost:8080');
+    const [state, setState] = React.useContext(StateContext);
+    const socket = io(state.multiplayerManager.socketIoURL);
 
     const [isConnected, setIsConnected] = React.useState(socket.connected);
     const [lastPong, setLastPong] = React.useState(null);

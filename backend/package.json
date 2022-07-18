@@ -4,9 +4,9 @@
     "description": "LootQuest4 backend",
     "main": "main.js",
     "scripts": {
-        "dev": "nodemon app.js",
-        "start": "node app.js",
-        "test": "test"
+        "build": "npx tsc",
+        "start": "node src/app.js",
+        "dev": "concurrently \"npx tsc --watch\" \"nodemon -q src/app.js\""
     },
     "author": "Donald Abdullah-Robinson",
     "license": "ISC",
@@ -16,6 +16,9 @@
         "socket.io": "^4.5.1"
     },
     "devDependencies": {
-        "nodemon": "^2.0.19"
+        "@types/express": "^4.17.13",
+        "@types/node": "^18.0.6",
+        "nodemon": "^2.0.19",
+        "typescript": "^4.7.4"
     }
 }

@@ -12,10 +12,11 @@ Next Update: "The Server Update"
 LootQuest will be moving to a server-managed game experience for multiplayer support, better save management, etc... PWA when?
 
 - Multiplayer II - Server Supported Chat
-   - Refactor console window to have an input at the bottom that can be typed into.
+   - Add ts support to back-end. +
+   - Refactor console window to have an input at the bottom that can be typed into. +
    - Allow console input to be 'submitted', sending to the back-end.
-   - Have socket.io publish submission to all other clients.
-   - Verify any tab can contribute to console chatting.
+   - Have socket.io publish console submissions to all other clients.
+   - Verify any browser tab can contribute to console chatting.
 - Multiplayer III - Player Awareness
    - Allow players to view state of each other in new 'Party' window. (Exploring, etc.)
       - Should show the area name and current activity.

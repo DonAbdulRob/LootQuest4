@@ -7,7 +7,7 @@ const { Server } = require('socket.io');
 const io = new Server(server);
 
 // Routes.
-var connection = require('./src/routes/connection.js');
+var connection = require('./routes/connection.js');
 app.use('/connection', connection);
 
 // Socket.io listener.

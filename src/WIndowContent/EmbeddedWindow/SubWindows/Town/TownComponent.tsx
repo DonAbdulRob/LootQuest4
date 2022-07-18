@@ -261,18 +261,18 @@ function getBackButton(store: IGlobalContext) {
     );
 }
 export function TownComponent() {
-    const [store, setState] = React.useContext(StateContext);
-    let view = store.playerManager.getMainPlayer().currentTownView;
+    const [state, setState] = React.useContext(StateContext);
+    let view = state.playerManager.getMainPlayer().currentTownView;
     let content: any;
 
     if (view === EViews.Root) {
-        content = getRootView(store);
+        content = getRootView(state);
     } else if (view === EViews.Shop) {
-        content = getShopView(store);
+        content = getShopView(state);
     } else if (view === EViews.Inn) {
-        content = getInnView(store);
+        content = getInnView(state);
     } else if (view === EViews.Forge) {
-        content = getForgeView(store);
+        content = getForgeView(state);
     }
 
     /** TODO
@@ -282,7 +282,7 @@ export function TownComponent() {
 
     return (
         <div>
-            <h1>{store.playerManager.getMainPlayer().currentArea.getDisplay()}</h1>
+            <h1>{state.playerManager.getMainPlayer().currentArea.getDisplay()}</h1>
             {content}
         </div>
     );

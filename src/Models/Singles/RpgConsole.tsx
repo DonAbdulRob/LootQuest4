@@ -6,6 +6,7 @@ import React from 'react';
 import { Line, getFormattedTime } from '../../WIndowContent/Console/ConsoleComponent';
 
 export class RpgConsole {
+    static MAX_LINES = 50;
     lines: Array<Line> = [];
     count: number = 1;
 
@@ -20,7 +21,7 @@ export class RpgConsole {
 
         this.lines.push({ text: x, time: s });
 
-        if (this.lines.length > 10) {
+        if (this.lines.length > RpgConsole.MAX_LINES) {
             this.lines.splice(0, 1);
         }
     }

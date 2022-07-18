@@ -1,4 +1,5 @@
 export class MultiplayerManager {
+    socketIoURL = 'http://localhost:8080'; // Value may be something we allow user to customize in the future through UI.
     multiplayerEnabled = true;
     multiplayerConnected = false;
 
