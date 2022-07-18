@@ -26,7 +26,6 @@ export const iconSizeStr = baseIconSize + 'px';
 export const StateContext = React.createContext(undefined);
 
 export interface IGlobalContext {
-    multiplayerManager: MultiplayerManager;
     themeManager: ThemeManager;
     playerManager: PlayerManager;
     monsterManager: MonsterManager;
@@ -38,11 +37,11 @@ export interface IGlobalContext {
     saveLib: SaveLib;
     debugMode: boolean;
     page: Page;
+    multiplayerManager: MultiplayerManager;
 }
 
 export function _G_GET_NEW_GLOBAL_CONTEXT_STATE_OBJECT(): IGlobalContext {
     return {
-        multiplayerManager: new MultiplayerManager(),
         themeManager: new ThemeManager(),
         playerManager: new PlayerManager(),
         monsterManager: new MonsterManager(),
@@ -54,5 +53,6 @@ export function _G_GET_NEW_GLOBAL_CONTEXT_STATE_OBJECT(): IGlobalContext {
         saveLib: new SaveLib(),
         debugMode: false,
         page: PageContainer.Play, // MainMenu for prod, Play for debug.
+        multiplayerManager: new MultiplayerManager(),
     };
 }

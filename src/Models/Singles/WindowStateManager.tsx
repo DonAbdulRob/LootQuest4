@@ -52,7 +52,7 @@ export default class WindowStateManager {
     setOnTop(id: number) {
         for (let data of this.windowDataArr) {
             if (data.id === id) {
-                if (data.ref !== undefined && data.ref.current !== undefined) {
+                if (data.ref !== undefined && data.ref.current !== undefined && data.ref.current !== null) {
                     // We manually update the ref's style so as to not trigger a refresh.
                     // Apparently, react 'reaaally' hates calling re-renders within the 'mouseenter' event, cause that breaks things.
                     // (specifically, every element died within the floating window div died, likely due to being replaced)

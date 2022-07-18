@@ -10,17 +10,23 @@ const io = new Server(server);
 var connection = require('./routes/connection.js');
 app.use('/connection', connection);
 
-// Socket.io listener.
-io.on('connect', (socket) => {
-    console.log('a user connected');
+let connections = 0;
 
-    socket.on('p', (msg) => {
-        console.log('Ping with message recieved: ' + msg);
-        socket.broadcast.emit('pong', 'Ping recieved on ' + new Date().toUTCString());
-    });
+// Socket.io listener.
+io.on('connection', (socket) => {
+    console.log('a user connected: ' + connections);
+    connections++;
+    // sockets.add(socket);
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log('a user disconnected: ' + connections);
+        connections--;
+    });
+
+    socket.on('ping', (msg) => {
+        console.log('Ping with message recieved: ' + msg);
+        io.emit('pong', 'Ping recieved on ' + new Date().toUTCString());
+        io.emit('pong', 'Ping recieved on ' + new Date().toUTCString() + ' with connections: ' + connections);
     });
 });
 
